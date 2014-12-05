@@ -125,8 +125,16 @@ test( 'entering room with a key', function( t ) {
 	.then( function( joinedRoom ) {
 
 		t.fail( 'was able to join room twice with key' );
+		endTest();
 	}, function( message ) {
 
 		t.pass( 'was not able to join room twice with key' );
+		endTest();
 	});
 });
+
+function endTest() {
+
+	friend.stop();
+	io.close();
+}
