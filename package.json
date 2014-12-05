@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/MikkoH/innkeeper-socket.io",
   "dependencies": {
+    "innkeeper": "^1.0.1",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {

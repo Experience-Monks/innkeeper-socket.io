@@ -2,8 +2,8 @@ var test = require( 'tape' ),
 	app = require('http').createServer(function(){}),
 	io = require('socket.io')(app),
 	forkfriend = require( 'forkfriend' ),
-	innkeeper = require( './..' ),
-	Room = require( '../lib/room' );
+	innkeeper = require( './../' ),
+	Room = require( 'innkeeper/lib/room' );
 
 var sockets = [], friend = forkfriend(), keeper, room, key;
 
@@ -17,7 +17,6 @@ test( 'reserving room', function( t ) {
 	io.on( 'connection', function( s ) {
 
 		sockets.push( s );
-
 
 		if( sockets.length == 3 ) {
 

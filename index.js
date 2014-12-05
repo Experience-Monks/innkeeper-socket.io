@@ -1,12 +1,10 @@
-module.exports = innkeeper;
+module.exports = innkeeperSocketIO;
 
-var storeRedis = require( './lib/storeRedis' ),
-	storeMemory = require( './lib/storeMemory' ),
-	innkeeper = require( 'innkeeper' );
+var innkeeper = require( 'innkeeper' );
 
 function innkeeperSocketIO( settings ) {
 
-	if( !( this instanceof innkeeper ) )
+	if( !( this instanceof innkeeperSocketIO ) )
 		return new innkeeperSocketIO( settings );
 
 	settings = settings || {};
@@ -24,7 +22,7 @@ innkeeperSocketIO.prototype = {
 	 */
 	reserve: function( socket ) {
 
-		return this.innkeeper.reserve( socket.id, this.memory );
+		return this.innkeeper.reserve( socket.id );
 	},
 
 	/**
@@ -37,7 +35,7 @@ innkeeperSocketIO.prototype = {
 	 */
 	enter: function( socket, id ) {
 
-		return this.innkeeper.enter( socket.id, this.memory, id );
+		return this.innkeeper.enter( socket.id, id );
 	},
 
 	/**
@@ -49,7 +47,7 @@ innkeeperSocketIO.prototype = {
 	 */
 	enterWithKey: function( socket, key ) {
 
-		return this.innkeeper.enterWithKey( socket.id, this.memory, key );
+		return this.innkeeper.enterWithKey( socket.id, key );
 	},
 
 	/**
@@ -60,6 +58,6 @@ innkeeperSocketIO.prototype = {
 	 */
 	leave: function( socket, id ) {
 
-		return this.innkeeper.leave( socket.id, this.memory, id );
+		return this.innkeeper.leave( socket.id, id );
 	}
 };
