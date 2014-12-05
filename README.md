@@ -1,4 +1,4 @@
 innkeeper-socket.io
 ===================
 
-socket.io version of innkeeper
+rooms++ for socket.io. Allows for private rooms where a key is used and storing data for a room.

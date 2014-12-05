@@ -1,0 +1,34 @@
+{
+  "name": "innkeeper-socket.io",
+  "version": "1.0.0",
+  "description": "rooms++ for socket.io. Allows for private rooms where a key is used and storing data for a room.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MikkoH/innkeeper-socket.io.git"
+  },
+  "keywords": [
+    "innkeeper",
+    "socket.io",
+    "rooms",
+    "data",
+    "secret"
+  ],
+  "author": "Mikko Haapoja <me@mikkoh.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MikkoH/innkeeper-socket.io/issues"
+  },
+  "homepage": "https://github.com/MikkoH/innkeeper-socket.io",
+  "dependencies": {
+    "socket.io": "^1.2.1"
+  },
+  "devDependencies": {
+    "forkfriend": "0.0.7",
+    "socket.io-client": "^1.2.1",
+    "tape": "^3.0.3"
+  }
+}
