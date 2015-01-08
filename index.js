@@ -22,7 +22,8 @@ innkeeperSocketIO.prototype = {
 	 */
 	reserve: function( socket ) {
 
-		return this.innkeeper.reserve( socket.id );
+		return this.innkeeper.reserve( socket.id )
+		.then( joinRoom.bind( this, socket ) );
 	},
 
 	/**
@@ -35,7 +36,8 @@ innkeeperSocketIO.prototype = {
 	 */
 	enter: function( socket, id ) {
 
-		return this.innkeeper.enter( socket.id, id );
+		return this.innkeeper.enter( socket.id, id )
+		.then( joinRoom.bind( this, socket ) );
 	},
 
 	/**
@@ -47,7 +49,8 @@ innkeeperSocketIO.prototype = {
 	 */
 	enterWithKey: function( socket, key ) {
 
-		return this.innkeeper.enterWithKey( socket.id, key );
+		return this.innkeeper.enterWithKey( socket.id, key )
+		.then( joinRoom.bind( this, socket ) );
 	},
 
 	/**
@@ -58,6 +61,38 @@ innkeeperSocketIO.prototype = {
 	 */
 	leave: function( socket, id ) {
 
-		return this.innkeeper.leave( socket.id, id );
+		return this.innkeeper.leave( socket.id, id )
+		.then( function( room ) {
+
+			var disconnectListeners = socket.listeners( 'disconnect' );
+
+			disconnectListeners.forEach( function( listener ) {
+
+				if( listener.roomId == id ) {
+
+					socket.removeListener( 'disconnect', listener );
+				}
+			});
+
+			socket.leave( id );
+
+			return room;
+		});
 	}
 };
+
+function joinRoom( socket, room ) {
+
+	var onDisconnect = function() {
+
+		this.leave( socket, room.id );
+	}.bind( this );
+
+	onDisconnect.roomId = room.id; // need to set this variable so if leave is called manually on disconnect the same room wont be left
+
+	socket.on( 'disconnect', onDisconnect );
+
+	socket.join( room.id );
+
+	return room;
+}
