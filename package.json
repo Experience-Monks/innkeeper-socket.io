@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/MikkoH/innkeeper-socket.io",
   "dependencies": {
+    "bluebird": "^2.9.8",
     "innkeeper": "^1.0.1",
     "socket.io": "^1.2.1"
   },
