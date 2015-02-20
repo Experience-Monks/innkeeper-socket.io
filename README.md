@@ -32,8 +32,15 @@ var keeper = innkeeper( { io: io } );
 keeper.reserve()
 .then( function( room ) {
   
+  // watch for room data changes
+  room.on( 'data', function( data, action ) {
+
+    console.log( data ); // current room data
+    console.log( action ); // what was done to change room data
+  });
+
   // create a variable which will be stored for the room
-  room.setVar( 'variable_name', 'some value' )
+  room.setVar( 'variable_name', 'some value' );
   .then( function( value ) {
 
     console.log( value ); // "some value"
@@ -148,6 +155,9 @@ data. `action` has details about the action which was taken to modify the rooms 
   value: value // the value of the variable
 }
 ```
+
+If `room.setRoomData( data )` is used then `action` will be `null`.
+
 
 
 
