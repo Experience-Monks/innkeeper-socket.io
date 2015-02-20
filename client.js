@@ -4,17 +4,20 @@ var promise = require( 'bluebird' );
 var events = require( './lib/events' );
 var clientRoom = require( './lib/clientRoom' );
 
-function client( ioClient ) {
+function client( settings ) {
 
   if( !( this instanceof client ) ) {
 
-    return new client( ioClient );
+    return new client( settings );
   }
 
-  this.ioClient = ioClient;
-  this.rooms = {};
+  if( !settings.io ) {
 
-  addListeners.call( this );
+    throw new Error( 'Please pass in a socket.io client in settings. eg. require( \'innkeeper-socket.io/client\' )( { io: io } );' );
+  }
+
+  this.ioClient = settings.io;
+  this.rooms = {};
 }
 
 client.EVENTS = events;
@@ -24,19 +27,26 @@ client.prototype = {
   reserve: function() {
 
     var client = this.ioClient;
+    var rooms = this.rooms;
+    var room;
 
     return new promise( function( ok, err ) {
 
       client.emit( events.ROOM_RESERVE, function( roomID ) {
 
-        ok( this.rooms[ roomID ] = clientRoom( client, roomID ) );
-      };
+        room = clientRoom( client, roomID );
+        rooms[ roomID ] = room;
+
+        ok( room );
+      });
     });
   },
 
   enter: function( roomID ) {
 
     var client = this.ioClient;
+    var rooms = this.rooms;
+    var room;
 
     return new promise( function( ok, err ) {
 
@@ -44,18 +54,23 @@ client.prototype = {
 
         if( roomID ) {
 
-          ok( this.rooms[ roomID ] = clientRoom( client, roomID ) );
+          room = clientRoom( client, roomID );
+          rooms[ roomID ] = room;
+
+          ok( room );
         } else {
 
           err( 'Could not join room' );
         }
-      };
+      });
     });
   },
 
   enterWithKey: function( roomKey ) {
 
     var client = this.ioClient;
+    var rooms = this.rooms;
+    var room;
 
     return new promise( function( ok, err ) {
 
@@ -63,18 +78,23 @@ client.prototype = {
 
         if( roomID ) {
 
-          ok( this.rooms[ roomID ] = clientRoom( client, roomID ) );
+          room = clientRoom( client, roomID );
+          rooms[ roomID ] = room;
+
+          ok( room );
         } else {
 
           err( 'Could not join room with key' );
         }
-      };
+      });
     });
   },
 
   leave: function( roomID ) {
 
     var client = this.ioClient;
+    var rooms = this.rooms;
+    var room;
 
     return new promise( function( ok, err ) {
 
@@ -82,16 +102,16 @@ client.prototype = {
 
         if( roomID ) {
 
-          var room = this.rooms[ roomID ];
+          room = rooms[ roomID ];
 
-          delete this.rooms[ roomID ];
+          delete rooms[ roomID ];
 
           ok( room );
         } else {
 
           err( 'could not leave room' );
         }
-      };
+      });
     });
   }
 };

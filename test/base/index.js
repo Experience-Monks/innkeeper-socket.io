@@ -1,9 +1,9 @@
-var test = require( 'tape' ),
-    app = require('http').createServer(function(){}),
-    io = require('socket.io')(app),
-    forkfriend = require( 'forkfriend' ),
-    innkeeper = require( './../../' ),
-    Room = require( 'innkeeper/lib/room' );
+var test = require( 'tape' );
+var app = require('http').createServer( function(){} );
+var io = require('socket.io')( app );
+var forkfriend = require( 'forkfriend' );
+var innkeeper = require( './../../' );
+var Room = require( 'innkeeper/lib/room' );
 
 var sockets = [], friends = [], keeper, room, key;
 

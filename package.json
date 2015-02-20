@@ -4,7 +4,7 @@
   "description": "rooms++ for socket.io. Allows for private rooms where a key is used and storing data for a room.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/base && node test/client"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,8 @@
   "dependencies": {
     "bluebird": "^2.9.8",
     "innkeeper": "^1.0.1",
-    "socket.io": "^1.2.1"
+    "socket.io": "^1.2.1",
+    "tape": "^3.5.0"
   },
   "devDependencies": {
     "forkfriend": "0.0.7",

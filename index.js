@@ -75,6 +75,7 @@ innkeeperSocketIO.prototype = {
 			var disconnectListeners = socket.listeners( 'disconnect' );
 			var roomVarListeners = socket.listeners( events.ROOM_VARIABLE );
 			var roomDataListeners = socket.listeners( events.ROOM_DATA );
+			var roomKeyListeners = socket.listeners( events.ROOM_KEY );
 
 			disconnectListeners.forEach( function( listener ) {
 
@@ -92,6 +93,14 @@ innkeeperSocketIO.prototype = {
 				}
 			});
 
+			roomKeyListeners.forEach( function( listener ) {
+
+				if( listener.roomId == roomID ) {
+
+					socket.removeListener( events.ROOM_KEY, listener );
+				}
+			});
+
 			roomDataListeners.forEach( function( listener ) {
 
 				if( listener.roomId == roomID ) {
@@ -99,7 +108,6 @@ innkeeperSocketIO.prototype = {
 					socket.removeListener( events.ROOM_DATA, listener );
 				}
 			});
-
 
 			// leave the room in socket.io
 			socket.leave( roomID );
@@ -113,10 +121,10 @@ function addIOListeners() {
 
 	var io = this.settings.io;
 
-	var reserve = this.reserve;
-	var enter = this.enter;
-	var enterWithKey = this.enterWithKey;
-	var leave = this.leave;
+	var reserve = this.reserve.bind( this );
+	var enter = this.enter.bind( this );
+	var enterWithKey = this.enterWithKey.bind( this );
+	var leave = this.leave.bind( this );
 
 	io.on( 'connection', function( socket ) {
 
@@ -178,40 +186,92 @@ function joinRoom( socket, room ) {
 		this.leave( socket, room.id );
 	}.bind( this );
 
+	var onRoomKey = function( req, done ) {
+
+		if( req.roomID == room.id ) {
+
+			switch( req.action ) {
+
+				case 'get':
+
+					room.getKey()
+					.then( done );
+				break;
+
+				case 'return':
+
+					room.returnKey()
+					.then( done );
+				break;
+
+				default: 
+
+					throw new Error( 'undefined action in onRoomKey' );
+				break;
+			};
+		}
+	}.bind( this );
+
 	// listener for when the user wants to act on the room data for the room
-	var onRoomVar = function( req ) {
+	var onRoomVar = function( req, done ) {
 
 		if( req.roomID == room.id ) {
 
 			switch( req.action ) {
 
 				case 'set':
-					room.setVar( req.key, req.value );
+					room
+					.setVar( req.key, req.value )
+					.then( done );
+				break;
+
+				case 'get': 
+
+					room.getVar( req.key )
+					.then( done );
 				break;
 
 				case 'delete':
-					room.deleteVar( req.key );
+					room
+					.deleteVar( req.key )
+					.then( done );
+				break;
+
+				default: 
+
+					throw new Error( 'undefined action in onRoomVar' );
 				break;
 			}
 		}
 	};
 
 	// listener for when room data is set
-	var onRoomData = function( req ) {
+	var onRoomData = function( req, done ) {
 
 		if( req.roomID == room.id ) {
 
-			room.setRoomData( req.data );
+			if( req.data ) {
+
+				room
+				.setRoomData( req.data )
+				.then( done );
+			} else {
+
+				room.getRoomData()
+				.then( done );
+			}
 		}
 	};
 
 	onDisconnect.roomId = room.id; // need to set this variable so if leave is called manually on disconnect the same room wont be left
 	onRoomVar.roomID = room.id;
 	onRoomData.roomID = room.id;
+	onRoomKey.roomID = room.id;
 
 	socket.on( 'disconnect', onDisconnect );
 	socket.on( events.ROOM_VARIABLE, onRoomVar );
 	socket.on( events.ROOM_DATA, onRoomData );
+	socket.on( events.ROOM_KEY, onRoomKey );
 
 	// get socket.io to join a room
 	socket.join( room.id );
