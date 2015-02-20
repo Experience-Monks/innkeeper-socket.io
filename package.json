@@ -25,13 +25,12 @@
   "homepage": "https://github.com/Jam3/innkeeper-socket.io",
   "dependencies": {
     "bluebird": "^2.9.8",
-    "innkeeper": "^1.0.1",
-    "socket.io": "^1.2.1",
-    "tape": "^3.5.0"
+    "innkeeper": "^1.0.1"
   },
   "devDependencies": {
     "forkfriend": "0.0.7",
+    "tape": "^3.5.0",
     "socket.io-client": "^1.2.1",
-    "tape": "^3.0.3"
+    "socket.io": "^1.2.1"
   }
 }
