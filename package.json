@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MikkoH/innkeeper-socket.io.git"
+    "url": "https://github.com/Jam3/innkeeper-socket.io.git"
   },
   "keywords": [
     "innkeeper",
@@ -20,9 +20,9 @@
   "author": "Mikko Haapoja <me@mikkoh.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MikkoH/innkeeper-socket.io/issues"
+    "url": "https://github.com/Jam3/innkeeper-socket.io/issues"
   },
-  "homepage": "https://github.com/MikkoH/innkeeper-socket.io",
+  "homepage": "https://github.com/Jam3/innkeeper-socket.io",
   "dependencies": {
     "bluebird": "^2.9.8",
     "innkeeper": "^1.0.1",
