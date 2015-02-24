@@ -98,6 +98,14 @@ instance for the room which you left.
 
 Room id. This can be shared to enter into a room. A room id is longer than a room key.
 
+#### `room.users` -
+
+Users in the room. An array of all the users in a room.
+
+#### `room.roomData` -
+
+Current data in the room.
+
 ### Methods -
 
 #### `room.getKey()` -
