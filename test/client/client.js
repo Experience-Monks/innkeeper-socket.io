@@ -114,6 +114,8 @@ test( 'other joining and setting variable', function( t ) {
     t.equal( info.action, 'join', 'action was correct' );
     t.ok( info.user, 'received user id' );
     t.equal( info.users.length, 2, 'two users in room' );
+
+    room.removeAllListeners( 'user' );
   });
 
   room.on( 'data', function( roomData, action ) {
@@ -121,7 +123,7 @@ test( 'other joining and setting variable', function( t ) {
     t.equal( roomData.other_set, 3333, 'other_set was correct' );
     t.equal( roomData.snakes, 3, 'snakes was correct' );
 
-    room.removeAllListeners();
+    room.removeAllListeners( 'data' );
   });
 
   process.send( {
