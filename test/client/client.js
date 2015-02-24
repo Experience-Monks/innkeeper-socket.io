@@ -103,11 +103,18 @@ test( 'get variable', function( t ) {
   });
 });
 
-test( 'getting others room variables', function( t ) {
+test( 'other joining and setting variable', function( t ) {
 
   // sub test getting others room variable
-  t.plan( 2 );
+  t.plan( 5 );
   t.timeoutAfter( 1000 );
+
+  room.on( 'user', function( info ) {
+
+    t.equal( info.action, 'join', 'action was correct' );
+    t.ok( info.user, 'received user id' );
+    t.equal( info.users.length, 2, 'two users in room' );
+  });
 
   room.on( 'data', function( roomData, action ) {
 

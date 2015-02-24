@@ -32,9 +32,9 @@ client.prototype = {
 
     return new promise( function( ok, err ) {
 
-      client.emit( events.ROOM_RESERVE, function( roomID ) {
+      client.emit( events.ROOM_RESERVE, function( roomID, roomData, roomUsers ) {
 
-        room = clientRoom( client, roomID );
+        room = clientRoom( client, roomID, roomData, roomUsers );
         rooms[ roomID ] = room;
 
         ok( room );
@@ -50,11 +50,11 @@ client.prototype = {
 
     return new promise( function( ok, err ) {
 
-      client.emit( events.ROOM_ENTER, roomID, function( roomID ) {
+      client.emit( events.ROOM_ENTER, roomID, function( roomID, roomData, roomUsers ) {
 
         if( roomID ) {
 
-          room = clientRoom( client, roomID );
+          room = clientRoom( client, roomID, roomData, roomUsers );
           rooms[ roomID ] = room;
 
           ok( room );
@@ -74,11 +74,11 @@ client.prototype = {
 
     return new promise( function( ok, err ) {
 
-      client.emit( events.ROOM_ENTER_WITH_KEY, roomKey, function( rVal ) {
+      client.emit( events.ROOM_ENTER_WITH_KEY, roomKey, function( roomID, roomData, roomUsers ) {
 
         if( roomID ) {
 
-          room = clientRoom( client, roomID );
+          room = clientRoom( client, roomID, roomData, roomUsers );
           rooms[ roomID ] = room;
 
           ok( room );

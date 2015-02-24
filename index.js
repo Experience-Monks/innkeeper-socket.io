@@ -69,6 +69,8 @@ innkeeperSocketIO.prototype = {
 	 */
 	leave: function( socket, roomID ) {
 
+		var io = this.settings.io;
+
 		return this.innkeeper.leave( socket.id, roomID )
 		.then( function( room ) {
 
@@ -109,6 +111,9 @@ innkeeperSocketIO.prototype = {
 				}
 			});
 
+			// emit they're leaving a room
+			socket.to( roomID ).emit( events.ROOM_LEAVE, socket.id );
+
 			// leave the room in socket.io
 			socket.leave( roomID );
 
@@ -133,16 +138,30 @@ function addIOListeners() {
 			reserve( socket )
 			.then( function( room ) {
 
-				done( room.id );
+				done( room.id, {}, [ socket.id ] );
 			});
 		});
 
 		socket.on( events.ROOM_ENTER, function( roomID, done ) {
 
+			var roomData, users;
+
 			enter( socket, roomID )
 			.then( function( room ) {
 
-				done( room.id );
+				room.getRoomData()
+				.then( function( rd ) {
+
+					roomData = rd;
+
+					return room.getUsers();
+				})
+				.then( function( u ) {
+
+					users = u;
+
+					done( room.id, roomData, users );
+				});
 			})
 			.catch( function() {
 				
@@ -155,7 +174,19 @@ function addIOListeners() {
 			enterWithKey( socket, roomKey )
 			.then( function( room ) {
 
-				done( room.id );
+				room.getRoomData()
+				.then( function( rd ) {
+
+					roomData = rd;
+
+					return room.getUsers();
+				})
+				.then( function( u ) {
+
+					users = u;
+
+					done( room.id, roomData, users );
+				});
 			})
 			.catch( function() {
 				
@@ -179,6 +210,8 @@ function addIOListeners() {
 }
 
 function joinRoom( socket, room ) {
+
+	var io = this.settings.io;
 
 	// listener for disconnecting
 	var onDisconnect = function() {
@@ -207,8 +240,7 @@ function joinRoom( socket, room ) {
 				default: 
 
 					throw new Error( 'undefined action in onRoomKey' );
-				break;
-			};
+			}
 		}
 	}.bind( this );
 
@@ -240,7 +272,6 @@ function joinRoom( socket, room ) {
 				default: 
 
 					throw new Error( 'undefined action in onRoomVar' );
-				break;
 			}
 		}
 	};
@@ -275,6 +306,9 @@ function joinRoom( socket, room ) {
 
 	// get socket.io to join a room
 	socket.join( room.id );
+
+	// let others know you joined
+	socket.to( room.id ).emit( events.ROOM_JOIN, socket.id );
 
 	return innRoom( this.settings.io, room );
 }
