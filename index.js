@@ -75,8 +75,8 @@ innkeeperSocketIO.prototype = {
 		.then( function( room ) {
 
 			var disconnectListeners = socket.listeners( 'disconnect' );
-			var roomVarListeners = socket.listeners( events.ROOM_VARIABLE );
-			var roomDataListeners = socket.listeners( events.ROOM_DATA );
+			var roomVarListeners = socket.listeners( events.CLIENT_ROOM_VARIABLE );
+			var roomDataListeners = socket.listeners( events.CLIENT_ROOM_DATA );
 			var roomKeyListeners = socket.listeners( events.ROOM_KEY );
 
 			disconnectListeners.forEach( function( listener ) {
@@ -91,7 +91,15 @@ innkeeperSocketIO.prototype = {
 
 				if( listener.roomId == roomID ) {
 
-					socket.removeListener( events.ROOM_VARIABLE, listener );
+					socket.removeListener( events.CLIENT_ROOM_VARIABLE, listener );
+				}
+			});
+
+			roomDataListeners.forEach( function( listener ) {
+
+				if( listener.roomId == roomID ) {
+
+					socket.removeListener( events.CLIENT_ROOM_DATA, listener );
 				}
 			});
 
@@ -100,14 +108,6 @@ innkeeperSocketIO.prototype = {
 				if( listener.roomId == roomID ) {
 
 					socket.removeListener( events.ROOM_KEY, listener );
-				}
-			});
-
-			roomDataListeners.forEach( function( listener ) {
-
-				if( listener.roomId == roomID ) {
-
-					socket.removeListener( events.ROOM_DATA, listener );
 				}
 			});
 
@@ -300,8 +300,8 @@ function joinRoom( socket, room ) {
 	onRoomKey.roomID = room.id;
 
 	socket.on( 'disconnect', onDisconnect );
-	socket.on( events.ROOM_VARIABLE, onRoomVar );
-	socket.on( events.ROOM_DATA, onRoomData );
+	socket.on( events.CLIENT_ROOM_VARIABLE, onRoomVar );
+	socket.on( events.CLIENT_ROOM_DATA, onRoomData );
 	socket.on( events.ROOM_KEY, onRoomKey );
 
 	// get socket.io to join a room
