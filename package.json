@@ -1,6 +1,6 @@
 {
   "name": "innkeeper-socket.io",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "rooms++ for socket.io. Allows for private rooms where a key is used and storing data for a room.",
   "main": "index.js",
   "scripts": {
