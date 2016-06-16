@@ -50,14 +50,34 @@ keeper.reserve()
 
 ## API
 
+## Server
+
+### Constructor - 
+
+Optionally in the options object you may pass a memory store. By default an in memory store will be used however Redis can be easily used by using [`innkeeper-storeredis`](https://www.npmjs.com/package/innkeeper-storeredis).
+
+Below is an example of creating a `innkeeper-socket.io` server using a redis store.
+```javascript
+var app = require('http').createServer( function(){} );
+var io = require( 'socket.io' )( app );
+var innkeeper = require( 'innkeeper-socket.io' );
+var redis = redis = require( 'redis' );
+
+var keeper = innkeeper({ 
+  io: io,
+  memory: require('innkeeper-storeredis')(redis.createClient())
+});
+
+app.listen( 8888 );
+```
+
 ## Client
 
 ### Constructor -
 
-#### `client = require( 'innkeeper-socket.io/client' )( { io: ioClient } );` -
+#### `client = require( 'innkeeper-socket.io/client' )(opts);` -
 
-Will construct a new client. A settings object wll be passed which must include a variable 
-`io` which will be an instance of a Socket.io client.
+Will construct a new client. A settings object must be passed which must include a variable `io` which will be an instance of a Socket.io client.
 
 ### Properties -
 
