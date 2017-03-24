@@ -62,6 +62,17 @@ innkeeperSocketIO.prototype = {
 	},
 
 	/**
+	 * Join an available public room or create one
+	 *
+	 * @param  {String} userId id of the user whose entering a room
+	 * @return {Promise} This promise will resolve by sending a room instance
+	 */
+	enterPublicRoom: function( socket ) {
+		return this.innkeeper.enterPublicRoom( socket.id )
+		.then( joinRoom.bind( this, socket ) );
+	},
+
+	/**
 	 * Leave a room.
 	 * 
 	 * @param  {String} roomID the id of a room you want to leave. Think of it as a room number.
