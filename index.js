@@ -67,8 +67,8 @@ innkeeperSocketIO.prototype = {
 	 * @param  {String} userId id of the user whose entering a room
 	 * @return {Promise} This promise will resolve by sending a room instance
 	 */
-	enterPublicRoom: function( socket ) {
-		return this.innkeeper.enterPublicRoom( socket.id )
+	enterPublic: function( socket ) {
+		return this.innkeeper.enterPublic( socket.id )
 		.then( joinRoom.bind( this, socket ) );
 	},
 
@@ -139,6 +139,7 @@ function addIOListeners() {
 
 	var reserve = this.reserve.bind( this );
 	var enter = this.enter.bind( this );
+	var enterPublic = this.enterPublic.bind( this );
 	var enterWithKey = this.enterWithKey.bind( this );
 	var leave = this.leave.bind( this );
 
@@ -158,6 +159,33 @@ function addIOListeners() {
 			var roomData, users;
 
 			enter( socket, roomID )
+			.then( function( room ) {
+
+				room.getRoomData()
+				.then( function( rd ) {
+
+					roomData = rd;
+
+					return room.getUsers();
+				})
+				.then( function( u ) {
+
+					users = u;
+
+					done( room.id, roomData, users );
+				});
+			})
+			.catch( function() {
+				
+				done( null );
+			});
+		});
+
+		socket.on( events.ROOM_ENTER_PUBLIC, function( done ) {
+
+			var roomData, users;
+
+			enterPublic( socket )
 			.then( function( room ) {
 
 				room.getRoomData()
@@ -207,7 +235,7 @@ function addIOListeners() {
 
 		socket.on( events.ROOM_LEAVE, function( roomID, done ) {
 
-			this.leave( socket, roomID )
+			leave( socket, roomID )
 			.then( function( room ) {
 
 				done( room.id );

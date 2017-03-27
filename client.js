@@ -66,6 +66,31 @@ client.prototype = {
     });
   },
 
+  enterPublic: function() {
+
+    var client = this.ioClient;
+    var rooms = this.rooms;
+    var room;
+
+     return new promise( function( ok, err ) {
+
+      client.emit( events.ROOM_ENTER_PUBLIC, function( roomID, roomData, roomUsers ) {
+
+        if( roomID ) {
+
+          room = clientRoom( client, roomID, roomData, roomUsers );
+          rooms[ roomID ] = room;
+
+          ok( room );
+        } else {
+
+          err( 'Could not join room' );
+        }
+      });
+    });
+
+  },
+
   enterWithKey: function( roomKey ) {
 
     var client = this.ioClient;
