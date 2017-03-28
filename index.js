@@ -145,9 +145,9 @@ function addIOListeners() {
 
 	io.on( 'connection', function( socket ) {
 
-		socket.on( events.ROOM_RESERVE, function( done ) {
+		socket.on( events.ROOM_RESERVE, function( isPublic, done ) {
 
-			reserve( socket )
+			reserve( socket, isPublic )
 			.then( function( room ) {
 
 				done( room.id, {}, [ socket.id ] );

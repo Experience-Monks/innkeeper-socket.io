@@ -88,11 +88,10 @@ key/variable name of the object.
 
 ### Methods -
 
-#### `client.reserve( socketId, isPublic )` -
+#### `client.reserve( isPublic )` -
 
-Reserve a room. A promise is returned which when it succeeds returns a `room` instance. Requires the id
-of the socket connection. Optionally pass in true for `isPublic` if you want the room to be joinable via
-`enterPublic`
+Reserve a room. A promise is returned which when it succeeds returns a `room` instance. Optionally pass
+in true for `isPublic` if you want the room to be joinable via `enterPublic`
 
 #### `client.enter( roomid )` -
 
