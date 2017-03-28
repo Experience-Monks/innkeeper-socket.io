@@ -353,6 +353,8 @@ function joinRoom( socket, room ) {
 	onRoomVar.roomID = room.id;
 	onRoomData.roomID = room.id;
 	onRoomKey.roomID = room.id;
+	onRoomPublic.roomID = room.id;
+	onRoomPrivate.roomID = room.id;
 
 	socket.on( 'disconnect', onDisconnect );
 	socket.on( events.CLIENT_ROOM_VARIABLE, onRoomVar );
