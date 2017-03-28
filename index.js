@@ -28,9 +28,9 @@ innkeeperSocketIO.prototype = {
 	 * 
 	 * @return {Promise} [description]
 	 */
-	reserve: function( socket, isPublic ) {
+	reserve: function( socket ) {
 
-		return this.innkeeper.reserve( socket.id, isPublic )
+		return this.innkeeper.reserve( socket.id )
 		.then( joinRoom.bind( this, socket ) );
 	},
 
@@ -145,9 +145,9 @@ function addIOListeners() {
 
 	io.on( 'connection', function( socket ) {
 
-		socket.on( events.ROOM_RESERVE, function( isPublic, done ) {
+		socket.on( events.ROOM_RESERVE, function( done ) {
 
-			reserve( socket, isPublic )
+			reserve( socket )
 			.then( function( room ) {
 
 				done( room.id, {}, [ socket.id ] );
@@ -337,7 +337,7 @@ function joinRoom( socket, room ) {
 	var onRoomPublic = function( req, done ) {
 
 		if( req.roomID == room.id ) {
-			room.makePublic();
+			room.setPublic();
 		}
 	};
 
@@ -345,7 +345,7 @@ function joinRoom( socket, room ) {
 	var onRoomPrivate = function( req, done ) {
 		
 		if( req.roomID == room.id ) {
-			room.makePrivate();
+			room.setPrivate();
 		}
 	};
 

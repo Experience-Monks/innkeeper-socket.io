@@ -24,7 +24,7 @@ client.EVENTS = events;
 
 client.prototype = {
 
-  reserve: function( isPublic ) {
+  reserve: function( ) {
 
     var client = this.ioClient;
     var rooms = this.rooms;
@@ -32,7 +32,7 @@ client.prototype = {
 
     return new promise( function( ok, err ) {
 
-      client.emit( events.ROOM_RESERVE, isPublic, function( roomID, roomData, roomUsers ) {
+      client.emit( events.ROOM_RESERVE, function( roomID, roomData, roomUsers ) {
 
         room = clientRoom( client, roomID, roomData, roomUsers );
         rooms[ roomID ] = room;
