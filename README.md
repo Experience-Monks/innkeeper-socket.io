@@ -88,9 +88,11 @@ key/variable name of the object.
 
 ### Methods -
 
-#### `client.reserve()` -
+#### `client.reserve( socketId, isPublic )` -
 
-Reserve a room. A promise is returned which when it succeeds returns a `room` instance.
+Reserve a room. A promise is returned which when it succeeds returns a `room` instance. Requires the id
+of the socket connection. Optionally pass in true for `isPublic` if you want the room to be joinable via
+`enterPublic`
 
 #### `client.enter( roomid )` -
 
@@ -105,11 +107,9 @@ instance. This promise will fail when an incorrect room key was passed or the ro
 
 #### `client.enterPublic()` -
 
-Enters a publicly available room or creates one if none exist. A public room is simply a room that
-anyone can enter using the `enterPublic()` method. This allows for easier anonymous multiuser
-connections. By default a public room will be set back to private after someone else joins, simply
-call `room.makePublic()` to make it publicly accessable again. This promise will return a standard 
-room instance.  
+Enters a publicly available room. A public room is simply a room that anyone can enter using the 
+`enterPublic()` method. This allows for easier anonymous multiuser connections. This promise will return a standard 
+room instance or reject if no rooms are available.  
 
 #### `client.leave( roomid )` -
 

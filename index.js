@@ -28,9 +28,9 @@ innkeeperSocketIO.prototype = {
 	 * 
 	 * @return {Promise} [description]
 	 */
-	reserve: function( socket ) {
+	reserve: function( socket, isPublic ) {
 
-		return this.innkeeper.reserve( socket.id )
+		return this.innkeeper.reserve( socket.id, isPublic )
 		.then( joinRoom.bind( this, socket ) );
 	},
 
@@ -62,10 +62,10 @@ innkeeperSocketIO.prototype = {
 	},
 
 	/**
-	 * Join an available public room or create one
+	 * Join an available public room
 	 *
 	 * @param  {String} userId id of the user whose entering a room
-	 * @return {Promise} This promise will resolve by sending a room instance
+	 * @return {Promise} This promise will resolve by sending a room instance or reject if no public rooms
 	 */
 	enterPublic: function( socket ) {
 		return this.innkeeper.enterPublic( socket.id )
