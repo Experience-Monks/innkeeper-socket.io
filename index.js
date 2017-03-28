@@ -333,6 +333,22 @@ function joinRoom( socket, room ) {
 		}
 	};
 
+	// listener for whem room is set public
+	var onRoomPublic = function( req, done ) {
+
+		if( req.roomID == room.id ) {
+			room.makePublic();
+		}
+	};
+
+	// listener for when room is set private
+	var onRoomPrivate = function( req, done ) {
+		
+		if( req.roomID == room.id ) {
+			room.makePrivate();
+		}
+	};
+
 	onDisconnect.roomId = room.id; // need to set this variable so if leave is called manually on disconnect the same room wont be left
 	onRoomVar.roomID = room.id;
 	onRoomData.roomID = room.id;
@@ -341,6 +357,8 @@ function joinRoom( socket, room ) {
 	socket.on( 'disconnect', onDisconnect );
 	socket.on( events.CLIENT_ROOM_VARIABLE, onRoomVar );
 	socket.on( events.CLIENT_ROOM_DATA, onRoomData );
+	socket.on( events.ROOM_PUBLIC, onRoomPublic );
+	socket.on( events.ROOM_PRIVATE, onRoomPrivate );
 	socket.on( events.ROOM_KEY, onRoomKey );
 
 	// get socket.io to join a room
