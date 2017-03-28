@@ -103,6 +103,14 @@ Enter a premade room using a key. A key is a short numeric pin which a room can 
 both a room id and a key. A promise is returned which when it succeeds returns a `room` 
 instance. This promise will fail when an incorrect room key was passed or the room doesn't exist anymore.
 
+#### `client.enterPublic()` -
+
+Enters a publicly available room or creates one if none exist. A public room is simply a room that
+anyone can enter using the `enterPublic()` method. This allows for easier anonymous multiuser
+connections. By default a public room will be set back to private after someone else joins, simply
+call `room.makePublic()` to make it publicly accessable again. This promise will return a standard 
+room instance.  
+
 #### `client.leave( roomid )` -
 
 Leave a premade room using the room id. A promise is returned which when it succeeds returns a `room` 
