@@ -337,7 +337,8 @@ function joinRoom( socket, room ) {
 	var onRoomPublic = function( req, done ) {
 
 		if( req.roomID == room.id ) {
-			room.setPublic();
+			room.setPublic()
+			.then( done );
 		}
 	};
 
@@ -345,7 +346,8 @@ function joinRoom( socket, room ) {
 	var onRoomPrivate = function( req, done ) {
 		
 		if( req.roomID == room.id ) {
-			room.setPrivate();
+			room.setPrivate()
+			.then( done );
 		}
 	};
 
