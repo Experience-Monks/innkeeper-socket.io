@@ -73,6 +73,16 @@ innkeeperSocketIO.prototype = {
 	},
 
 	/**
+	 * Retrieves the room of a peticular user
+	 *
+	 * @param  {String} userId id of the user whose entering a room
+	 * @return {Room} This will return the room of requested user or null if not in a room
+	 */
+	getRoom: function( socket ) {
+		return this.innkeeper.getRoom( socket.id );
+	},
+
+	/**
 	 * Leave a room.
 	 * 
 	 * @param  {String} roomID the id of a room you want to leave. Think of it as a room number.
@@ -369,6 +379,7 @@ function joinRoom( socket, room ) {
 	socket.join( room.id );
 
 	// let others know you joined
+	
 	socket.to( room.id ).emit( events.ROOM_JOIN, socket.id );
 
 	return innRoom( this.settings.io, room );

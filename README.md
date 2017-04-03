@@ -114,6 +114,9 @@ room instance or reject if no rooms are available.
 Leave a premade room using the room id. A promise is returned which when it succeeds returns a `room` 
 instance for the room which you left.
 
+#### `client.getRoom( socket )` -
+
+Returns the room for the specified socket, or `null` if the socket is not in a room.
 
 
 ## Room
