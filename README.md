@@ -88,7 +88,7 @@ key/variable name of the object.
 
 ### Methods -
 
-#### `client.reserve()` -
+#### `client.reserve( )` -
 
 Reserve a room. A promise is returned which when it succeeds returns a `room` instance.
 
@@ -102,6 +102,12 @@ instance. This promise will fail when an incorrect room id was passed or the roo
 Enter a premade room using a key. A key is a short numeric pin which a room can have. A room can have
 both a room id and a key. A promise is returned which when it succeeds returns a `room` 
 instance. This promise will fail when an incorrect room key was passed or the room doesn't exist anymore.
+
+#### `client.enterPublic()` -
+
+Enters a publicly available room. A public room is simply a room that anyone can enter using the 
+`enterPublic()` method. This allows for easier anonymous multiuser connections. This promise will return a standard 
+room instance or reject if no rooms are available.  
 
 #### `client.leave( roomid )` -
 
@@ -167,6 +173,16 @@ an Object with values for the room. Values of variables should be Javascript pri
 
 get all variables and values stored for the room. A promise is returned. When this promise resolved an `Object`
 is returned.
+
+#### `room.setPublic()` -
+
+Make the room publically available via `client.enterPublic`. A promise is returned which will resolve once the
+room state has changed.
+
+#### `room.setPrivate()` -
+
+Make the room private so it cannot be entered via `client.enterPublic`. This is the default state for a room.
+A promise is returned which will resolve once the room state has changed.
 
 ### Events -
 #### `room.on( 'data', function( data, action ) { } );`

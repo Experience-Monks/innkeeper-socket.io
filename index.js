@@ -62,6 +62,17 @@ innkeeperSocketIO.prototype = {
 	},
 
 	/**
+	 * Join an available public room
+	 *
+	 * @param  {String} userId id of the user whose entering a room
+	 * @return {Promise} This promise will resolve by sending a room instance or reject if no public rooms
+	 */
+	enterPublic: function( socket ) {
+		return this.innkeeper.enterPublic( socket.id )
+		.then( joinRoom.bind( this, socket ) );
+	},
+
+	/**
 	 * Leave a room.
 	 * 
 	 * @param  {String} roomID the id of a room you want to leave. Think of it as a room number.
@@ -128,6 +139,7 @@ function addIOListeners() {
 
 	var reserve = this.reserve.bind( this );
 	var enter = this.enter.bind( this );
+	var enterPublic = this.enterPublic.bind( this );
 	var enterWithKey = this.enterWithKey.bind( this );
 	var leave = this.leave.bind( this );
 
@@ -147,6 +159,33 @@ function addIOListeners() {
 			var roomData, users;
 
 			enter( socket, roomID )
+			.then( function( room ) {
+
+				room.getRoomData()
+				.then( function( rd ) {
+
+					roomData = rd;
+
+					return room.getUsers();
+				})
+				.then( function( u ) {
+
+					users = u;
+
+					done( room.id, roomData, users );
+				});
+			})
+			.catch( function() {
+				
+				done( null );
+			});
+		});
+
+		socket.on( events.ROOM_ENTER_PUBLIC, function( done ) {
+
+			var roomData, users;
+
+			enterPublic( socket )
 			.then( function( room ) {
 
 				room.getRoomData()
@@ -196,7 +235,7 @@ function addIOListeners() {
 
 		socket.on( events.ROOM_LEAVE, function( roomID, done ) {
 
-			this.leave( socket, roomID )
+			leave( socket, roomID )
 			.then( function( room ) {
 
 				done( room.id );
@@ -294,14 +333,34 @@ function joinRoom( socket, room ) {
 		}
 	};
 
+	// listener for whem room is set public
+	var onRoomPublic = function( req, done ) {
+
+		if( req.roomID == room.id ) {
+			room.setPublic();
+		}
+	};
+
+	// listener for when room is set private
+	var onRoomPrivate = function( req, done ) {
+		
+		if( req.roomID == room.id ) {
+			room.setPrivate();
+		}
+	};
+
 	onDisconnect.roomId = room.id; // need to set this variable so if leave is called manually on disconnect the same room wont be left
 	onRoomVar.roomID = room.id;
 	onRoomData.roomID = room.id;
 	onRoomKey.roomID = room.id;
+	onRoomPublic.roomID = room.id;
+	onRoomPrivate.roomID = room.id;
 
 	socket.on( 'disconnect', onDisconnect );
 	socket.on( events.CLIENT_ROOM_VARIABLE, onRoomVar );
 	socket.on( events.CLIENT_ROOM_DATA, onRoomData );
+	socket.on( events.ROOM_PUBLIC, onRoomPublic );
+	socket.on( events.ROOM_PRIVATE, onRoomPrivate );
 	socket.on( events.ROOM_KEY, onRoomKey );
 
 	// get socket.io to join a room
