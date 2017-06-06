@@ -104,6 +104,7 @@ client.prototype = {
         if( roomID ) {
 
           room = clientRoom( client, roomID, roomData, roomUsers );
+          room.key = roomKey;
           rooms[ roomID ] = room;
 
           ok( room );
