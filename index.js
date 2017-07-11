@@ -142,6 +142,10 @@ innkeeperSocketIO.prototype = {
 			// leave the room in socket.io
 			socket.leave( roomID );
 
+			room.removeAllListeners('user');
+			room.removeAllListeners(events.ROOM_DATA);
+			room.removeAllListeners(events.ROOM_VARIABLE);
+
 			return room;
 		});
 	}
