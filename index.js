@@ -68,8 +68,12 @@ innkeeperSocketIO.prototype = {
 	 * @return {Promise} This promise will resolve by sending a room instance or reject if no public rooms
 	 */
 	enterPublic: function( socket ) {
+		var next = joinRoom.bind(this, socket);
 		return this.innkeeper.enterPublic( socket.id )
-		.then( joinRoom.bind( this, socket ) );
+		.then( function( room ) {
+			room.setPrivate();
+			return next(room);
+		} );
 	},
 
 	/**
